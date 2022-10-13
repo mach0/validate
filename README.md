@@ -1,6 +1,10 @@
 # buildingSMART validation service
 
 ifc-pipeline is a processing queue that uses [IfcOpenShell](https://github.com/IfcOpenShell/IfcOpenShell/) to convert IFC input files into a graphic display using glTF 2.0 and [BIMSurfer2](https://github.com/AECgeeks/BIMsurfer2/) for visualization. There is a small web application in Flask that accepts file uploads. HTTPS is provided by Nginx. Everything is tied together using Docker Compose.
+## cloning
+
+Remember to clone with
+git clone --recurse-submodules repository to get all check submodules
 
 ## Validation
 

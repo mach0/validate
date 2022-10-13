@@ -72,9 +72,14 @@ application = Flask(__name__)
 
 DEVELOPMENT = os.environ.get(
     'environment', 'production').lower() == 'development'
-
+DEVELOPMENT = True
 VALIDATION = 1
 VIEWER = 0
+
+os.environ["SECRET_KEY"] = "345345"
+os.environ["CLIENT_ID"] = "345345"
+os.environ["CLIENT_SECRET"] = "345345"
+os.environ["SERVER_NAME"] = "localhost"
 
 if not DEVELOPMENT and os.path.exists("/version"):
     PIPELINE_POSTFIX = "." + open("/version").read().strip()
@@ -111,7 +116,6 @@ if not DEVELOPMENT and not NO_REDIS:
     q = Queue(connection=Redis(host=os.environ.get(
         "REDIS_HOST", "localhost")), default_timeout=3600)
 
-
 if not DEVELOPMENT:
     application.config['SESSION_TYPE'] = 'filesystem'
     application.config['SECRET_KEY'] = os.environ['SECRET_KEY']
@@ -125,23 +129,29 @@ if not DEVELOPMENT:
     token_url = 'https://authentication.buildingsmart.org/buildingSMARTservices.onmicrosoft.com/b2c_1a_signupsignin_c/oauth2/v2.0/token'
     redirect_uri = f'https://{os.environ["SERVER_NAME"]}/callback'
 
-
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not DEVELOPMENT:
-            if not "oauth_token" in session.keys():
-                return redirect(url_for('login'))
-            with database.Session() as db_session:
-                user = db_session.query(database.user).filter(database.user.id == session['decoded']["sub"]).all()
-                if len(user) == 0:
-                     return redirect(url_for('login'))
-            return f(session['decoded'],*args, **kwargs)
-        else:
-            with open('decoded.json') as json_file:
-                decoded = json.load(json_file)
-            return f(decoded, *args, **kwargs)
+        user_data = {'sub': 'my-user-id-0', 'email': 'test@example.org', 'name': 'Test User', 'given_name': 'Test', 'family_name': 'User'}
+        return f(user_data, *args, **kwargs)
     return decorated_function
+
+#def login_required(f):
+#    @wraps(f)
+#    def decorated_function(*args, **kwargs):
+#        if not DEVELOPMENT:
+#            if not "oauth_token" in session.keys():
+#                return redirect(url_for('login'))
+#            with database.Session() as db_session:
+#                user = db_session.query(database.user).filter(database.user.id == session['decoded']["sub"]).all()
+#                if len(user) == 0:
+#                     return redirect(url_for('login'))
+#            return f(session['decoded'],*args, **kwargs)
+#        else:
+#            with open('decoded.json') as json_file:
+#                decoded = json.load(json_file)
+#            return f(decoded, *args, **kwargs)
+#    return decorated_function
 
 
 @application.route("/")

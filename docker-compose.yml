@@ -36,7 +36,7 @@ services:
       - MG_KEY=${MG_KEY}
       - MG_EMAIL=${MG_EMAIL}
       - CRYPTOGRAPHY_DONT_BUILD_RUST=1
-      - SECRET_KEY=${SECRET_KEY}
+      - SECRET_KEY=key241
       
     expose:
       - "5000"
@@ -55,19 +55,8 @@ services:
       - "443:443"
     volumes:
       - ./nginx:/etc/nginx/conf.d
-      - ./docker-volumes/certbot/conf:/etc/letsencrypt
-      - ./docker-volumes/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c \"nginx -g 'daemon off;' & while true; do nginx -t && nginx -s reload; sleep 1h; done\""
     
-  
-  certbot:
-    ports: []
-    image: certbot/certbot
-    volumes:
-      - ./docker-volumes/certbot/conf:/etc/letsencrypt
-      - ./docker-volumes/certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit INT TERM; while true; do certbot renew --webroot -w /var/www/certbot; sleep 12h; done'"
-
   worker:
     build:
       context: '.'
