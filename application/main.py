@@ -74,6 +74,7 @@ DEVELOPMENT = os.environ.get(
 
 VALIDATION = 1
 VIEWER = 0
+DEVELOPMENT = True
 
 if not DEVELOPMENT and os.path.exists("/version"):
     PIPELINE_POSTFIX = "." + open("/version").read().strip()
@@ -124,7 +125,6 @@ if not DEVELOPMENT:
     token_url = 'https://authentication.buildingsmart.org/buildingSMARTservices.onmicrosoft.com/b2c_1a_signupsignin_c/oauth2/v2.0/token'
     redirect_uri = f'https://{os.environ["SERVER_NAME"]}/callback'
 
-
 def login_required(f):
     @wraps(f)
     def decorated_function(**kwargs):
@@ -148,7 +148,7 @@ def login_required(f):
                     'email': 'test@example.org',
                     'family_name': 'User',
                     'given_name': 'Test',
-                    'name': 'Test User',
+                    'name': 'IQSOFT',
                 }
 
         return f(user_data=user_data, **kwargs)
