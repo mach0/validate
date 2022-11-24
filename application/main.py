@@ -146,8 +146,8 @@ def login_required(f):
                 user_data = {
                     'sub': 'development-id',
                     'email': 'test@example.org',
-                    'family_name': 'User',
-                    'given_name': 'Test',
+                    'family_name': 'BIM',
+                    'given_name': 'IQSOFT',
                     'name': 'IQSOFT',
                 }
 
